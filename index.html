@@ -12,32 +12,34 @@
       background-color: #f1f5f9;
       color: #0f172a;
     }
-    .screen { display: none; }
-    .screen.active { display: block; animation: fadeIn 0.2s ease-out; }
+    .screen {
+      display: none;
+    }
+    .screen.active {
+      display: block;
+      animation: fadeIn 0.2s ease-out;
+    }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    /* Custom scrollbar */
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: #e2e8f0; }
-    ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
   <!-- ヘッダー -->
   <header class="bg-slate-900 text-white shadow-md sticky top-0 z-30">
-    <div class="max-w-5xl mx-auto px-4 py-3.5 flex items-center justify-between">
-      <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('home')">
-        <div class="bg-red-600 p-2 rounded-lg font-black text-lg tracking-wider shadow">消防判定</div>
+    <div class="max-w-5xl mx-auto px-4 py-3.5 flex items-center justify-between gap-3">
+      <div id="headerBrand" class="flex items-center gap-3 cursor-pointer">
+        <div class="bg-red-600 p-2 rounded-lg font-black text-base sm:text-lg tracking-wider shadow">消防判定</div>
         <div>
-          <h1 class="text-base sm:text-lg font-bold leading-tight">消防用設備 設置判定・図面数量算定・A材積算</h1>
-          <p class="text-xs text-slate-400">消防法・総務省消防庁告示・FESC基準対応 / カタログ定価積算</p>
+          <h1 class="text-sm sm:text-lg font-bold leading-tight">消防用設備 設置判定・図面数量算定・A材積算</h1>
+          <p class="text-xs text-slate-400">消防法・消防庁告示・FESC・JFEMA基準 / カタログ定価積算</p>
         </div>
       </div>
-      <button onclick="navigateTo('home')" id="headerHomeBtn" class="hidden text-sm bg-slate-800 hover:bg-slate-700 border border-slate-600 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
-        <span>🏠</span><span>メニューへ戻る</span>
+      <button type="button" id="headerHomeBtn" class="hidden text-xs sm:text-sm bg-slate-800 hover:bg-slate-700 border border-slate-600 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 shrink-0">
+        <span>🏠</span>
+        <span>メニューへ戻る</span>
       </button>
     </div>
   </header>
@@ -54,7 +56,7 @@
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- 1. 物件情報を入力 -->
-        <button onclick="navigateTo('input')" class="group bg-white hover:bg-red-50/40 border-2 border-slate-200 hover:border-red-500 rounded-2xl p-6 text-left shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+        <button type="button" data-nav="input" class="nav-btn group bg-white hover:bg-red-50/40 border-2 border-slate-200 hover:border-red-500 rounded-2xl p-6 text-left shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
           <div>
             <div class="w-12 h-12 rounded-xl bg-red-100 text-red-600 flex items-center justify-center text-2xl font-black mb-4 group-hover:scale-105 transition-transform">
               1
@@ -71,6 +73,1307 @@
         </button>
 
         <!-- 2. 参考資料 -->
-        <button onclick="navigateTo('refs')" class="group bg-white hover:bg-blue-50/40 border-2 border-slate-200 hover:border-blue-500 rounded-2xl p-6 text-left shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+        <button type="button" data-nav="refs" class="nav-btn group bg-white hover:bg-blue-50/40 border-2 border-slate-200 hover:border-blue-500 rounded-2xl p-6 text-left shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
           <div>
-            <div class="w-12
+            <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-2xl font-black mb-4 group-hover:scale-105 transition-transform">
+              2
+            </div>
+            <h3 class="text-xl font-bold text-slate-800 group-hover:text-blue-700">2. 参考資料</h3>
+            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+              判定の根拠となる消防法・総務省消防庁告示・FESC・JFEMA基準の一覧を確認できます。法改正時の追加・削除も可能です。
+            </p>
+          </div>
+          <div class="mt-6 flex items-center justify-between gap-2">
+            <span class="text-blue-600 font-bold text-sm flex items-center">
+              <span>資料データベースを開く</span>
+              <span class="ml-1 group-hover:translate-x-1 transition-transform">→</span>
+            </span>
+            <span id="homeRefCount" class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full font-medium">6件有効 / 6件</span>
+          </div>
+        </button>
+
+        <!-- 3. カタログ管理 -->
+        <button type="button" data-nav="catalog" class="nav-btn group bg-white hover:bg-emerald-50/40 border-2 border-slate-200 hover:border-emerald-500 rounded-2xl p-6 text-left shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl font-black mb-4 group-hover:scale-105 transition-transform">
+              3
+            </div>
+            <h3 class="text-xl font-bold text-slate-800 group-hover:text-emerald-700">3. カタログ管理（A材定価）</h3>
+            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+              ハツタ・パナソニック等の機器カタログ品番・定価マスタを確認します。新規機種の追加や不要機種の削除・単価改定に対応しています。
+            </p>
+          </div>
+          <div class="mt-6 flex items-center justify-between gap-2">
+            <span class="text-emerald-600 font-bold text-sm flex items-center">
+              <span>カタログを編集する</span>
+              <span class="ml-1 group-hover:translate-x-1 transition-transform">→</span>
+            </span>
+            <span id="homeCatCount" class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full font-medium">15品目登録中</span>
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== 1. 物件情報入力画面 ==================== -->
+    <section id="screen-input" class="screen">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+        <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+          <span class="bg-red-600 text-white text-sm px-2.5 py-0.5 rounded-md">STEP 1</span>
+          物件情報・各階条件・図面の入力
+        </h2>
+        <button type="button" id="fillSampleBtn" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-3 py-1.5 rounded-lg transition">
+          サンプル物件を入力
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-6">
+        <!-- 基本情報 -->
+        <div>
+          <h3 class="text-base font-bold text-slate-800 border-b border-slate-200 pb-2 mb-4">基本情報（未入力の項目は分岐パターンを表示します）</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="md:col-span-2">
+              <label for="buildingUse" class="block text-sm font-bold text-slate-700 mb-1">使用用途（消防法施行令 別表第1）</label>
+              <select id="buildingUse" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-red-500">
+                <option value="">-- 未選択（用途による必要設備の違いを表示） --</option>
+                <option value="1_ro">（1）項ロ：公会堂・集会場</option>
+                <option value="2_ro">（2）項ロ：遊技場・ダンスホール</option>
+                <option value="2_ni">（2）項ニ：カラオケボックス等</option>
+                <option value="3_ro">（3）項ロ：飲食店（喫茶店・レストラン等）</option>
+                <option value="4">（4）項：百貨店・マーケット・物品販売店舗</option>
+                <option value="5_i">（5）項イ：旅館・ホテル・宿泊所</option>
+                <option value="5_ro">（5）項ロ：寄宿舎・下宿・共同住宅</option>
+                <option value="6_i">（6）項イ：病院・診療所・助産所</option>
+                <option value="6_ro">（6）項ロ：老人短期入所施設・特別養護老人ホーム等（自力避難困難）</option>
+                <option value="6_ha">（6）項ハ：老人デイサービスセンター・保育所等</option>
+                <option value="7">（7）項：小学校・中学校・高等学校・大学・各種学校</option>
+                <option value="12_i">（12）項イ：工場・作業場</option>
+                <option value="13_i">（13）項イ：自動車車庫・駐車場</option>
+                <option value="14">（14）項：倉庫</option>
+                <option value="15">（15）項：事務所・銀行・その他事業場</option>
+                <option value="16_i">（16）項イ：特定複合用途防火対象物（店舗＋共同住宅等）</option>
+                <option value="16_ro">（16）項ロ：非特定複合用途防火対象物（事務所＋共同住宅等）</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="aboveFloors" class="block text-sm font-bold text-slate-700 mb-1">地上階数（階）</label>
+              <input type="number" id="aboveFloors" min="0" max="50" placeholder="例: 3（未入力可）" class="floor-count-input w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500" />
+            </div>
+
+            <div>
+              <label for="basementFloors" class="block text-sm font-bold text-slate-700 mb-1">地下階数（階）</label>
+              <input type="number" id="basementFloors" min="0" max="10" placeholder="例: 1（なければ0または空欄）" class="floor-count-input w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500" />
+            </div>
+
+            <div>
+              <label for="totalArea" class="block text-sm font-bold text-slate-700 mb-1">延べ面積（㎡）</label>
+              <input type="number" id="totalArea" min="0" step="0.1" placeholder="例: 650（未入力可）" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500" />
+            </div>
+
+            <div>
+              <label for="occupancy" class="block text-sm font-bold text-slate-700 mb-1">収容人員（人）</label>
+              <input type="number" id="occupancy" min="0" placeholder="例: 45（未入力可）" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 各階床面積・無窓階の有無 -->
+        <div>
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2 mb-3">
+            <h3 class="text-base font-bold text-slate-800">各階ごとの床面積・無窓階の有無</h3>
+            <span class="text-xs text-slate-500">※上の「地上階数」「地下階数」を入力すると自動で各階が表示されます</span>
+          </div>
+          <div id="floorTableContainer" class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm text-slate-500 text-center">
+            地上階数または地下階数を入力すると、各階の床面積・無窓階チェック欄が表示されます。
+          </div>
+        </div>
+
+        <!-- 図面挿入エリア -->
+        <div>
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2 mb-3">
+            <h3 class="text-base font-bold text-slate-800">図面データの追加（複数枚対応）</h3>
+            <button type="button" id="addSampleDrawingsBtn" class="text-xs bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 font-bold px-3 py-1 rounded-lg transition">
+              + サンプル図面（2枚）を追加してテスト
+            </button>
+          </div>
+          <p class="text-xs text-slate-500 mb-3">
+            平面図・消防設備図（PNG / JPG / PDF）を複数枚追加すると、図面情報および各階面積から必要な設備の個数・本数を自動算定します。
+          </p>
+
+          <label class="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-slate-300 hover:border-red-400 rounded-xl cursor-pointer bg-slate-50 hover:bg-red-50/30 transition">
+            <div class="flex flex-col items-center justify-center pt-4 pb-4 px-2 text-center">
+              <p class="text-sm font-bold text-slate-700">クリックして図面ファイルを選択（複数選択可）</p>
+              <p class="text-xs text-slate-400 mt-1">対応形式: PNG, JPG, WebP, PDF</p>
+            </div>
+            <input id="drawingFileInput" type="file" multiple accept="image/*,.pdf" class="hidden" />
+          </label>
+
+          <div id="drawingListContainer" class="mt-3 space-y-2"></div>
+        </div>
+
+        <!-- 1番下：上記内容で検索ボタン -->
+        <div class="pt-4 border-t border-slate-200">
+          <button type="button" id="searchBtn" class="w-full bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-black text-lg py-4 rounded-xl shadow-lg shadow-red-600/20 transition flex items-center justify-center gap-2">
+            <span>🔍</span>
+            <span>上記内容で検索</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 判定結果画面 ==================== -->
+    <section id="screen-result" class="screen">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+        <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+          <span class="bg-slate-800 text-white text-sm px-2.5 py-0.5 rounded-md">判定結果</span>
+          必要な消防設備・個数算定結果
+        </h2>
+        <button type="button" data-nav="input" class="nav-btn text-sm bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-bold px-4 py-2 rounded-xl transition">
+          ← 物件情報の入力へ戻る
+        </button>
+      </div>
+
+      <!-- 入力条件サマリー -->
+      <div id="resultSummaryBar" class="bg-white border border-slate-200 rounded-xl p-4 mb-5 text-xs text-slate-600 flex flex-wrap gap-x-6 gap-y-1.5"></div>
+
+      <!-- 1. 必要な消防設備・個数一覧 -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-3 mb-4">
+          <div>
+            <h3 class="text-lg font-bold text-slate-800">必要な消防用設備および算定個数・本数</h3>
+            <p class="text-xs text-slate-500 mt-0.5">有効な参考資料（法令・告示）および入力面積・図面データに基づく算定結果</p>
+          </div>
+          <!-- A材値段を表示ボタン -->
+          <button type="button" id="showMaterialCostBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm px-5 py-2.5 rounded-xl shadow transition flex items-center gap-2">
+            <span>💴</span>
+            <span>A材値段を表示</span>
+          </button>
+        </div>
+
+        <div id="requiredEquipmentList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+
+        <!-- A材費用積算パネル（ボタン押下で展開） -->
+        <div id="materialCostPanel" class="hidden mt-6 pt-6 border-t-2 border-emerald-200">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div>
+              <h4 class="text-base font-bold text-emerald-900 flex items-center gap-2">
+                <span>📋 A材定価積算明細（ハツタ・パナソニック等 カタログ定価基準）</span>
+              </h4>
+              <p class="text-xs text-slate-500">機種プルダウンの変更や数量調整が可能です。品目の追加・削除は「カタログ管理」で行えます。</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button type="button" data-nav="catalog" class="nav-btn text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 font-bold px-3 py-1.5 rounded-lg transition">
+                + カタログを追加・編集
+              </button>
+              <button type="button" id="exportCsvBtn" class="text-xs bg-slate-800 hover:bg-slate-700 text-white font-bold px-3 py-1.5 rounded-lg transition">
+                CSV出力
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto border border-slate-200 rounded-xl">
+            <table class="w-full text-left border-collapse text-sm">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 text-xs border-b border-slate-200">
+                  <th class="p-3 font-bold">設備区分</th>
+                  <th class="p-3 font-bold">メーカー・機種（カタログ選択）</th>
+                  <th class="p-3 font-bold">型番</th>
+                  <th class="p-3 font-bold text-right">定価(税抜)</th>
+                  <th class="p-3 font-bold text-center w-24">数量</th>
+                  <th class="p-3 font-bold text-right">金額(税抜)</th>
+                </tr>
+              </thead>
+              <tbody id="materialCostTableBody" class="divide-y divide-slate-200"></tbody>
+              <tfoot class="bg-emerald-50/70 font-bold text-slate-800">
+                <tr>
+                  <td colspan="5" class="p-3 text-right">A材 定価合計（税抜）</td>
+                  <td id="totalCostExTax" class="p-3 text-right text-base text-emerald-800">¥0</td>
+                </tr>
+                <tr class="border-t border-emerald-200">
+                  <td colspan="5" class="p-3 text-right text-xs text-slate-600">A材 定価合計（税込 10%）</td>
+                  <td id="totalCostIncTax" class="p-3 text-right text-sm text-slate-700">¥0</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 未入力情報による設備の有無（下部に表示） -->
+      <div class="bg-amber-50/80 rounded-2xl border border-amber-300 p-6">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-xl">⚠️</span>
+          <h3 class="text-base font-bold text-amber-900">未入力情報による設備の有無（条件分岐パターン）</h3>
+        </div>
+        <div id="missingParamsContainer" class="space-y-3"></div>
+      </div>
+    </section>
+
+    <!-- ==================== 2. 参考資料画面 ==================== -->
+    <section id="screen-refs" class="screen">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+        <div>
+          <h2 class="text-xl font-bold text-slate-800">2. 参考資料（適用法令・技術基準データベース）</h2>
+          <p class="text-xs text-slate-500 mt-0.5">法改正や新規告示に合わせて資料の追加・削除・有効化切替が行えます（判定ロジックに連動）。</p>
+        </div>
+        <button type="button" id="resetRefsBtn" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-3 py-1.5 rounded-lg transition">
+          初期データに戻す
+        </button>
+      </div>
+
+      <!-- 新規参考資料追加フォーム -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-6">
+        <h3 class="text-sm font-bold text-slate-800 mb-3">+ 参考資料・法改正基準を新規追加</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <input type="text" id="newRefTitle" placeholder="資料名（例：消防法施行令 第21条 改正基準）" class="border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <input type="text" id="newRefOrg" placeholder="発行機関（例：総務省消防庁 / FESC）" class="border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <input type="text" id="newRefUrl" placeholder="URL（任意：https://...）" class="border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <div class="md:col-span-2">
+            <input type="text" id="newRefSummary" placeholder="概要・判定ルールメモ（例：延べ面積300㎡以上の特定用途に自火報を義務付け）" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div class="flex gap-2">
+            <select id="newRefCategory" class="flex-1 border border-slate-300 rounded-xl px-3 py-2 text-sm bg-white">
+              <option value="all">全般基準</option>
+              <option value="extinguisher">消火器基準</option>
+              <option value="alarm">自動火災報知設備</option>
+              <option value="hydrant">屋内消火栓設備</option>
+              <option value="guide">誘導灯・誘導標識</option>
+            </select>
+            <button type="button" id="addRefBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm px-4 py-2 rounded-xl transition">
+              追加
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 登録済み参考資料一覧 -->
+      <div id="referenceListContainer" class="space-y-3"></div>
+    </section>
+
+    <!-- ==================== 3. カタログ管理画面 ==================== -->
+    <section id="screen-catalog" class="screen">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+        <div>
+          <h2 class="text-xl font-bold text-slate-800">3. カタログ管理（ハツタ・パナソニック等 A材定価マスタ）</h2>
+          <p class="text-xs text-slate-500 mt-0.5">A材費用積算に使用する機器カタログを追加・削除できます。</p>
+        </div>
+        <button type="button" id="resetCatalogBtn" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium px-3 py-1.5 rounded-lg transition">
+          初期カタログに戻す
+        </button>
+      </div>
+
+      <!-- カタログ新規追加フォーム -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-6">
+        <h3 class="text-sm font-bold text-slate-800 mb-3">+ カタログ機器を新規追加</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-3">
+          <div>
+            <label for="catCategory" class="block text-xs font-bold text-slate-600 mb-1">設備区分</label>
+            <select id="catCategory" class="w-full border border-slate-300 rounded-xl px-2.5 py-2 text-sm bg-white">
+              <option value="extinguisher">消火器</option>
+              <option value="smoke_detector">煙感知器</option>
+              <option value="heat_detector">熱感知器</option>
+              <option value="receiver">受信機</option>
+              <option value="transmitter_bell">発信機・ベル</option>
+              <option value="guide_light">誘導灯</option>
+              <option value="hydrant">屋内消火栓</option>
+              <option value="escape">避難器具</option>
+            </select>
+          </div>
+          <div>
+            <label for="catMaker" class="block text-xs font-bold text-slate-600 mb-1">メーカー</label>
+            <input type="text" id="catMaker" placeholder="例: ハツタ / パナソニック" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm" />
+          </div>
+          <div class="sm:col-span-2">
+            <label for="catName" class="block text-xs font-bold text-slate-600 mb-1">品名・仕様</label>
+            <input type="text" id="catName" placeholder="例: ABC粉末消火器 10型（蓄圧式）" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label for="catModel" class="block text-xs font-bold text-slate-600 mb-1">型番</label>
+            <input type="text" id="catModel" placeholder="例: PEP-10N" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm" />
+          </div>
+          <div>
+            <label for="catPrice" class="block text-xs font-bold text-slate-600 mb-1">定価(税抜・円)</label>
+            <div class="flex gap-1.5">
+              <input type="number" id="catPrice" placeholder="22000" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm" />
+              <button type="button" id="addCatalogBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm px-3.5 py-2 rounded-xl shrink-0">
+                追加
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- カタログ一覧テーブル -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-slate-100 text-slate-700 text-xs border-b border-slate-200">
+                <th class="p-3 font-bold">設備区分</th>
+                <th class="p-3 font-bold">メーカー</th>
+                <th class="p-3 font-bold">品名・仕様</th>
+                <th class="p-3 font-bold">型番</th>
+                <th class="p-3 font-bold text-right">定価(税抜)</th>
+                <th class="p-3 font-bold text-center w-20">操作</th>
+              </tr>
+            </thead>
+            <tbody id="catalogTableBody" class="divide-y divide-slate-200"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-400">
+    消防法・消防庁告示基準 判定＆A材積算アシスタント（ブラウザ自動保存対応）
+  </footer>
+
+  <script>
+    (function () {
+      const DEFAULT_REFERENCES = [
+        {
+          id: 'ref1',
+          title: '用途別設備の一覧（消防設備ナビ）',
+          org: '一般財団法人 日本消防設備安全センター（FESC）',
+          url: 'https://www.fesc.or.jp/sp_navi/list02/',
+          summary: '防火対象物の用途区分（別表第1）に応じた消防用設備等の設置基準一覧。',
+          category: 'all',
+          enabled: true
+        },
+        {
+          id: 'ref2',
+          title: '消防法 抜粋（第4章 消防の設備等・第17条）',
+          org: '総務省消防庁',
+          url: 'https://www.fdma.go.jp/singi_kento/kento/items/post-89/02/sankou2-6.pdf',
+          summary: '防火対象物の関係者による消防用設備等の設置および維持義務の基本規定。',
+          category: 'all',
+          enabled: true
+        },
+        {
+          id: 'ref3',
+          title: '自動火災報知設備の設置基準（違反是正シンポジウム資料）',
+          org: '一般財団法人 日本消防設備安全センター（FESC）',
+          url: 'https://www.fesc.or.jp/ihanzesei/symposium/pdf/S-seminer_R6_5.pdf',
+          summary: '消防法施行令第21条に基づく用途・面積・無窓階・特定一階段等防火対象物の自火報設置基準。',
+          category: 'alarm',
+          enabled: true
+        },
+        {
+          id: 'ref4',
+          title: '消火器の義務設置・点検基準',
+          org: '一般社団法人 日本消火器工業会（JFEMA）',
+          url: 'https://www.jfema.or.jp/about/duty/',
+          summary: '消防法施行令第10条に基づく消火器の設置義務（特定用途150㎡以上、非特定300㎡以上、地階・無窓階50㎡以上等）。',
+          category: 'extinguisher',
+          enabled: true
+        },
+        {
+          id: 'ref5',
+          title: '誘導灯及び誘導標識の基準（平成11年消防庁告示第2号）',
+          org: '総務省消防庁',
+          url: 'https://www.fdma.go.jp/laws/kokuji/assets/h11_kokuzi2.pdf',
+          summary: '避難口誘導灯・通路誘導灯の区分（A級・B級・C級）、配置間隔（歩行距離20m/15m以下）および輝度基準。',
+          category: 'guide',
+          enabled: true
+        },
+        {
+          id: 'ref6',
+          title: '屋内消火栓設備の屋内消火栓等の基準（平成25年消防庁告示第2号）',
+          org: '総務省消防庁',
+          url: 'https://www.fdma.go.jp/laws/kokuji/assets/h25_kokuji2.pdf',
+          summary: '1号消火栓・易操作性1号消火栓・2号消火栓の構造・放水圧力・ホース長さ（水平距離25m/15m）の技術基準。',
+          category: 'hydrant',
+          enabled: true
+        }
+      ];
+
+      const DEFAULT_CATALOG = [
+        { id: 'c1', category: 'extinguisher', maker: 'ハツタ', name: 'ABC粉末消火器 10型（蓄圧式）', model: 'PEP-10N', price: 22000 },
+        { id: 'c2', category: 'extinguisher', maker: 'ハツタ', name: 'ABC粉末消火器 20型（蓄圧式）', model: 'PEP-20', price: 38500 },
+        { id: 'c3', category: 'extinguisher', maker: 'ハツタ', name: '強化液消火器 3L（蓄圧式）', model: 'ALS-3', price: 34000 },
+        { id: 'c4', category: 'smoke_detector', maker: 'パナソニック', name: '光電式スポット型感知器 2種（ヘッド＋ベース）', model: 'BV454818 + BVK4510', price: 11800 },
+        { id: 'c5', category: 'smoke_detector', maker: 'パナソニック', name: '光電式スポット型感知器 3種（ヘッド＋ベース）', model: 'BV455818 + BVK4510', price: 12400 },
+        { id: 'c6', category: 'heat_detector', maker: 'パナソニック', name: '差動式スポット型感知器 2種（ヘッド＋ベース）', model: 'BV42208K + BVK4510', price: 7200 },
+        { id: 'c7', category: 'heat_detector', maker: 'パナソニック', name: '定温式スポット型感知器 特種65℃（防水・ヘッド＋ベース）', model: 'BV419121 + BVK4510', price: 8900 },
+        { id: 'c8', category: 'receiver', maker: 'パナソニック', name: 'P型1級受信機 5回線（壁掛型・露出）', model: 'BVJ10105H', price: 248000 },
+        { id: 'c9', category: 'receiver', maker: 'パナソニック', name: 'P型1級受信機 10回線（壁掛型・露出）', model: 'BVJ10110H', price: 335000 },
+        { id: 'c10', category: 'transmitter_bell', maker: 'パナソニック', name: 'P型1級発信機・表示灯・ベルセット（屋内露出）', model: 'BV964522H + BV996401 + BV967022H', price: 32500 },
+        { id: 'c11', category: 'guide_light', maker: 'パナソニック', name: 'LED誘導灯 C級（10形）避難口・通路本体＋パネル', model: 'FA10312CLE1 + FK10300', price: 31800 },
+        { id: 'c12', category: 'guide_light', maker: 'パナソニック', name: 'LED誘導灯 B級・BL形（20B形）本体＋パネル', model: 'FA20312CLE1 + FK20300', price: 48500 },
+        { id: 'c13', category: 'hydrant', maker: 'ハツタ', name: '1号屋内消火栓箱セット（露出型・ホース15m×2本）', model: 'H-1S-15', price: 185000 },
+        { id: 'c14', category: 'hydrant', maker: 'ハツタ', name: '易操作性1号屋内消火栓箱セット（露出型・30m）', model: 'HE-1S-30', price: 245000 },
+        { id: 'c15', category: 'escape', maker: 'ハツタ', name: '緩降機（2〜3階用・取付金具付セット）', model: 'ORIRO-S2', price: 115000 }
+      ];
+
+      const CATEGORY_LABELS = {
+        extinguisher: '消火器',
+        smoke_detector: '煙感知器',
+        heat_detector: '熱感知器',
+        receiver: '受信機',
+        transmitter_bell: '発信機・ベル',
+        guide_light: '誘導灯',
+        hydrant: '屋内消火栓',
+        escape: '避難器具'
+      };
+
+      const USE_LABELS = {
+        '1_ro': '（1）項ロ：公会堂・集会場',
+        '2_ro': '（2）項ロ：遊技場・ダンスホール',
+        '2_ni': '（2）項ニ：カラオケボックス等',
+        '3_ro': '（3）項ロ：飲食店',
+        '4': '（4）項：物品販売店舗・マーケット',
+        '5_i': '（5）項イ：旅館・ホテル・宿泊所',
+        '5_ro': '（5）項ロ：共同住宅・寄宿舎',
+        '6_i': '（6）項イ：病院・診療所',
+        '6_ro': '（6）項ロ：特別養護老人ホーム等（自力避難困難）',
+        '6_ha': '（6）項ハ：保育所・デイサービス等',
+        '7': '（7）項：学校',
+        '12_i': '（12）項イ：工場・作業場',
+        '13_i': '（13）項イ：自動車車庫・駐車場',
+        '14': '（14）項：倉庫',
+        '15': '（15）項：事務所・事業場',
+        '16_i': '（16）項イ：特定複合用途防火対象物',
+        '16_ro': '（16）項ロ：非特定複合用途防火対象物'
+      };
+
+      const SPECIFIC_USES = ['1_ro', '2_ro', '2_ni', '3_ro', '4', '5_i', '6_i', '6_ro', '6_ha', '16_i'];
+
+      function loadStorage(key, fallback) {
+        try {
+          const raw = localStorage.getItem(key);
+          return raw ? JSON.parse(raw) : fallback.slice();
+        } catch (e) {
+          return fallback.slice();
+        }
+      }
+
+      function saveStorage(key, value) {
+        try {
+          localStorage.setItem(key, JSON.stringify(value));
+        } catch (e) {
+          // ストレージ制限時も動作継続
+        }
+      }
+
+      let references = loadStorage('fire_refs_v3', DEFAULT_REFERENCES);
+      let catalog = loadStorage('fire_catalog_v3', DEFAULT_CATALOG);
+      let uploadedDrawings = [];
+      let currentEstimateLines = [];
+
+      function updateHomeCounts() {
+        const refEl = document.getElementById('homeRefCount');
+        const catEl = document.getElementById('homeCatCount');
+        if (refEl) refEl.textContent = `${references.filter(r => r.enabled).length}件有効 / ${references.length}件`;
+        if (catEl) catEl.textContent = `${catalog.length}品目登録中`;
+      }
+
+      function navigateTo(screenId) {
+        const screens = document.querySelectorAll('.screen');
+        screens.forEach(sec => sec.classList.remove('active'));
+        const target = document.getElementById(`screen-${screenId}`);
+        if (target) {
+          target.classList.add('active');
+        }
+        const homeBtn = document.getElementById('headerHomeBtn');
+        if (homeBtn) {
+          if (screenId === 'home') homeBtn.classList.add('hidden');
+          else homeBtn.classList.remove('hidden');
+        }
+        if (screenId === 'refs') renderReferences();
+        if (screenId === 'catalog') renderCatalog();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // 各階入力行の生成
+      function renderFloorRows() {
+        const above = Math.max(0, parseInt(document.getElementById('aboveFloors').value, 10) || 0);
+        const basement = Math.max(0, parseInt(document.getElementById('basementFloors').value, 10) || 0);
+        const container = document.getElementById('floorTableContainer');
+
+        if (above === 0 && basement === 0) {
+          container.className = 'bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm text-slate-500 text-center';
+          container.textContent = '地上階数または地下階数を入力すると、各階の床面積・無窓階チェック欄が表示されます。';
+          return;
+        }
+
+        const existingData = {};
+        document.querySelectorAll('.floor-row').forEach(row => {
+          const key = row.dataset.floorKey;
+          existingData[key] = {
+            area: row.querySelector('.floor-area-input').value,
+            windowless: row.querySelector('.floor-windowless-input').checked
+          };
+        });
+
+        let rowsHtml = '';
+        for (let f = above; f >= 1; f--) {
+          const key = `F${f}`;
+          const prev = existingData[key] || { area: '', windowless: false };
+          rowsHtml += `
+            <tr class="floor-row bg-white" data-floor-key="${key}" data-floor-label="地上${f}階" data-is-basement="false" data-floor-num="${f}">
+              <td class="py-2.5 px-3 font-bold text-slate-800">地上 ${f} 階</td>
+              <td class="py-2.5 px-3">
+                <input type="number" min="0" step="0.1" value="${prev.area}" placeholder="床面積 (㎡)" class="floor-area-input w-full max-w-xs border border-slate-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500" />
+              </td>
+              <td class="py-2.5 px-3 text-center">
+                <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                  <input type="checkbox" ${prev.windowless ? 'checked' : ''} class="floor-windowless-input w-4 h-4 accent-red-600 rounded" />
+                  <span class="text-xs font-medium text-slate-700">無窓階</span>
+                </label>
+              </td>
+            </tr>
+          `;
+        }
+
+        for (let b = 1; b <= basement; b++) {
+          const key = `B${b}`;
+          const prev = existingData[key] || { area: '', windowless: true };
+          rowsHtml += `
+            <tr class="floor-row bg-slate-100/70" data-floor-key="${key}" data-floor-label="地下${b}階" data-is-basement="true" data-floor-num="${b}">
+              <td class="py-2.5 px-3 font-bold text-indigo-900">地下 ${b} 階</td>
+              <td class="py-2.5 px-3">
+                <input type="number" min="0" step="0.1" value="${prev.area}" placeholder="床面積 (㎡)" class="floor-area-input w-full max-w-xs border border-slate-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-500" />
+              </td>
+              <td class="py-2.5 px-3 text-center">
+                <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                  <input type="checkbox" ${prev.windowless ? 'checked' : ''} class="floor-windowless-input w-4 h-4 accent-red-600 rounded" />
+                  <span class="text-xs font-medium text-slate-700">無窓階扱い</span>
+                </label>
+              </td>
+            </tr>
+          `;
+        }
+
+        container.className = 'bg-slate-50 border border-slate-200 rounded-xl p-3';
+        container.innerHTML = `
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-sm">
+              <thead>
+                <tr class="border-b border-slate-300 text-slate-700 text-xs">
+                  <th class="py-2 px-3 font-bold w-28">階</th>
+                  <th class="py-2 px-3 font-bold">床面積（㎡）</th>
+                  <th class="py-2 px-3 font-bold text-center w-36">無窓階の有無</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200">${rowsHtml}</tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      // 図面管理
+      function renderDrawingList() {
+        const container = document.getElementById('drawingListContainer');
+        if (uploadedDrawings.length === 0) {
+          container.innerHTML = '';
+          return;
+        }
+        container.innerHTML = uploadedDrawings.map((d, idx) => `
+          <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs">
+            <div class="flex items-center gap-2 font-bold text-slate-800">
+              <span class="bg-red-100 text-red-700 px-2 py-0.5 rounded">図面${idx + 1}</span>
+              <span>${d.name}</span>
+              <span class="text-slate-400 font-normal">(${d.sizeKB} KB)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-slate-500">対象階:</span>
+              <input type="text" data-dw-idx="${idx}" data-dw-field="floorTag" value="${d.floorTag}" class="dw-edit border border-slate-300 rounded px-2 py-1 w-24 bg-white" />
+              <span class="text-slate-500">区画数:</span>
+              <input type="number" min="1" max="100" data-dw-idx="${idx}" data-dw-field="roomCount" value="${d.roomCount}" class="dw-edit border border-slate-300 rounded px-2 py-1 w-14 bg-white text-center" />
+              <button type="button" data-dw-del="${d.id}" class="dw-del-btn text-red-600 hover:text-red-800 font-bold px-2 py-1">削除</button>
+            </div>
+          </div>
+        `).join('');
+
+        container.querySelectorAll('.dw-edit').forEach(inp => {
+          inp.addEventListener('change', e => {
+            const i = parseInt(e.target.dataset.dwIdx, 10);
+            const field = e.target.dataset.dwField;
+            if (!uploadedDrawings[i]) return;
+            if (field === 'roomCount') {
+              uploadedDrawings[i].roomCount = Math.max(1, parseInt(e.target.value, 10) || 1);
+            } else {
+              uploadedDrawings[i][field] = e.target.value;
+            }
+          });
+        });
+
+        container.querySelectorAll('.dw-del-btn').forEach(btn => {
+          btn.addEventListener('click', e => {
+            const id = e.currentTarget.dataset.dwDel;
+            uploadedDrawings = uploadedDrawings.filter(item => item.id !== id);
+            renderDrawingList();
+          });
+        });
+      }
+
+      function addSampleDrawings() {
+        uploadedDrawings.push(
+          { id: 'dw_s1_' + Date.now(), name: '地上1階_平面図_店舗兼事務室.pdf', sizeKB: 420, floorTag: '地上1階', roomCount: 7 },
+          { id: 'dw_s2_' + Date.now(), name: '地上2階_平面図_会議室・倉庫.png', sizeKB: 385, floorTag: '地上2階', roomCount: 6 }
+        );
+        renderDrawingList();
+      }
+
+      function fillSampleBuilding() {
+        document.getElementById('buildingUse').value = '4';
+        document.getElementById('aboveFloors').value = '3';
+        document.getElementById('basementFloors').value = '0';
+        document.getElementById('totalArea').value = '780';
+        document.getElementById('occupancy').value = '';
+        renderFloorRows();
+        const rows = document.querySelectorAll('.floor-row');
+        if (rows[0]) rows[0].querySelector('.floor-area-input').value = '260';
+        if (rows[1]) {
+          rows[1].querySelector('.floor-area-input').value = '260';
+          rows[1].querySelector('.floor-windowless-input').checked = true;
+        }
+        if (rows[2]) rows[2].querySelector('.floor-area-input').value = '260';
+        if (uploadedDrawings.length === 0) addSampleDrawings();
+      }
+
+      // 判定・個数算定
+      function executeSearch() {
+        const use = document.getElementById('buildingUse').value;
+        const aboveVal = document.getElementById('aboveFloors').value;
+        const basementVal = document.getElementById('basementFloors').value;
+        const totalAreaVal = document.getElementById('totalArea').value;
+        const occupancyVal = document.getElementById('occupancy').value;
+
+        const above = aboveVal !== '' ? parseInt(aboveVal, 10) : null;
+        const basement = basementVal !== '' ? parseInt(basementVal, 10) : 0;
+        const occupancy = occupancyVal !== '' ? parseInt(occupancyVal, 10) : null;
+
+        const floors = [];
+        let sumFloorArea = 0;
+        document.querySelectorAll('.floor-row').forEach(row => {
+          const a = parseFloat(row.querySelector('.floor-area-input').value) || 0;
+          const w = row.querySelector('.floor-windowless-input').checked;
+          sumFloorArea += a;
+          floors.push({
+            label: row.dataset.floorLabel,
+            isBasement: row.dataset.isBasement === 'true',
+            floorNum: parseInt(row.dataset.floorNum, 10),
+            area: a,
+            windowless: w
+          });
+        });
+
+        const totalArea = totalAreaVal !== '' ? parseFloat(totalAreaVal) : (sumFloorArea > 0 ? sumFloorArea : null);
+        const isSpecific = use ? SPECIFIC_USES.includes(use) : null;
+        const hasWindowless = floors.some(f => f.windowless);
+        const windowlessFloors = floors.filter(f => f.windowless);
+
+        const activeRefCategories = new Set(references.filter(r => r.enabled).map(r => r.category));
+        const useAllRefs = activeRefCategories.has('all');
+
+        document.getElementById('resultSummaryBar').innerHTML = `
+          <span><strong>用途:</strong> ${use ? USE_LABELS[use] : '未入力'}</span>
+          <span><strong>階数:</strong> ${above !== null ? `地上${above}階 / 地下${basement}階` : '未入力'}</span>
+          <span><strong>延べ面積:</strong> ${totalArea !== null ? totalArea + ' ㎡' : '未入力'}</span>
+          <span><strong>収容人員:</strong> ${occupancy !== null ? occupancy + ' 人' : '未入力'}</span>
+          <span><strong>無窓階:</strong> ${windowlessFloors.length > 0 ? windowlessFloors.map(f => f.label).join('・') : 'なし/未設定'}</span>
+          <span><strong>添付図面:</strong> ${uploadedDrawings.length} 枚</span>
+        `;
+
+        const equipmentResults = [];
+        const effectiveArea = totalArea || 300;
+        const floorCount = Math.max(1, (above || 1) + basement);
+        const drawingRooms = uploadedDrawings.reduce((acc, d) => acc + (d.roomCount || 1), 0);
+
+        // (A) 消火器具
+        if (useAllRefs || activeRefCategories.has('extinguisher')) {
+          let needExt = false;
+          let reason = '';
+          if (use === '6_ro' || use === '1_ro') {
+            needExt = true;
+            reason = '面積にかかわらず設置義務あり（消防法施行令第10条）';
+          } else if (isSpecific && totalArea !== null && totalArea >= 150) {
+            needExt = true;
+            reason = `特定防火対象物で延べ面積150㎡以上（${totalArea}㎡）`;
+          } else if (isSpecific === false && totalArea !== null && totalArea >= 300) {
+            needExt = true;
+            reason = `非特定防火対象物で延べ面積300㎡以上（${totalArea}㎡）`;
+          } else if (windowlessFloors.some(f => f.area >= 50)) {
+            needExt = true;
+            reason = '無窓階または地階の床面積が50㎡以上';
+          } else if (uploadedDrawings.length > 0) {
+            needExt = true;
+            reason = '添付図面に基づく歩行距離20m以内の配置算定';
+          }
+
+          if (needExt) {
+            let count = 0;
+            if (floors.length > 0) {
+              floors.forEach(f => {
+                const a = f.area || (effectiveArea / floorCount);
+                count += Math.max(1, Math.ceil(a / 200));
+              });
+            } else {
+              count = Math.max(2, Math.ceil(effectiveArea / 200));
+            }
+            if (uploadedDrawings.length > 0) {
+              count = Math.max(count, uploadedDrawings.length * 2);
+            }
+            equipmentResults.push({
+              catKey: 'extinguisher',
+              name: '消火器具（ABC粉末消火器等）',
+              count,
+              unit: '本',
+              basis: reason,
+              detail: `歩行距離20m以下基準・${floors.length || floorCount}フロア分算定`
+            });
+          }
+        }
+
+        // (B) 自動火災報知設備
+        if (useAllRefs || activeRefCategories.has('alarm')) {
+          let needAlarm = false;
+          let reason = '';
+          if (['6_ro', '5_i', '6_i', '2_ni'].includes(use)) {
+            needAlarm = true;
+            reason = '該当用途は面積にかかわらず全棟設置義務あり（令第21条）';
+          } else if (isSpecific && totalArea !== null && totalArea >= 300) {
+            needAlarm = true;
+            reason = `特定防火対象物で延べ面積300㎡以上（${totalArea}㎡）`;
+          } else if (isSpecific === false && totalArea !== null && totalArea >= 500) {
+            needAlarm = true;
+            reason = `非特定防火対象物で延べ面積500㎡以上（${totalArea}㎡）`;
+          } else if (windowlessFloors.some(f => f.area >= 300) || (above !== null && above >= 3 && hasWindowless)) {
+            needAlarm = true;
+            reason = '無窓階（300㎡以上）または3階以上の無窓階を有する建物';
+          } else if (uploadedDrawings.length > 0 && effectiveArea >= 300) {
+            needAlarm = true;
+            reason = '図面および床面積条件に基づく自動火災報知設備の設置判定';
+          }
+
+          if (needAlarm) {
+            const baseRooms = drawingRooms > 0 ? drawingRooms : Math.max(4, Math.ceil(effectiveArea / 45));
+            const smokeCount = Math.max(2, Math.ceil(baseRooms * 0.75));
+            const heatCount = Math.max(1, Math.ceil(baseRooms * 0.25));
+            const bellCount = Math.max(1, floorCount);
+
+            equipmentResults.push(
+              {
+                catKey: 'smoke_detector',
+                name: '自動火災報知設備：煙感知器（光電式2種）',
+                count: smokeCount,
+                unit: '個',
+                basis: reason,
+                detail: '居室・廊下・階段室用（図面区画数・床面積より算定）'
+              },
+              {
+                catKey: 'heat_detector',
+                name: '自動火災報知設備：熱感知器（差動式・定温式）',
+                count: heatCount,
+                unit: '個',
+                basis: reason,
+                detail: '厨房・湯沸室・倉庫・車庫等（煙感知器不適応場所）'
+              },
+              {
+                catKey: 'receiver',
+                name: '自動火災報知設備：P型1級受信機',
+                count: 1,
+                unit: '面',
+                basis: '警戒区域数に応じた受信機設置',
+                detail: `${Math.max(5, floorCount * 2)}回線対応（管理室・防災センター等）`
+              },
+              {
+                catKey: 'transmitter_bell',
+                name: '自動火災報知設備：発信機・表示灯・音響装置',
+                count: bellCount,
+                unit: '組',
+                basis: '各階・歩行距離50m以下ごとに設置',
+                detail: `各階1組×${bellCount}フロア分`
+              }
+            );
+          }
+        }
+
+        // (C) 誘導灯・誘導標識
+        if (useAllRefs || activeRefCategories.has('guide')) {
+          let needGuide = false;
+          let reason = '';
+          if (isSpecific || hasWindowless || basement > 0 || uploadedDrawings.length > 0) {
+            needGuide = true;
+            reason = (hasWindowless || basement > 0)
+              ? '無窓階または地階を有するため避難口・通路誘導灯が必要（平成11年告示第2号）'
+              : '特定用途または図面上の避難経路に基づき誘導灯を設置';
+          }
+          if (needGuide) {
+            const guideCount = Math.max(2, floorCount * 2 + Math.floor(uploadedDrawings.length));
+            equipmentResults.push({
+              catKey: 'guide_light',
+              name: '誘導灯（LED避難口誘導灯・通路誘導灯）',
+              count: guideCount,
+              unit: '台',
+              basis: reason,
+              detail: '直通階段出入口・廊下曲がり角（歩行距離20m/15m以下）'
+            });
+          }
+        }
+
+        // (D) 屋内消火栓設備
+        if (useAllRefs || activeRefCategories.has('hydrant')) {
+          let needHydrant = false;
+          let reason = '';
+          const threshold = isSpecific ? 700 : 1000;
+          if (totalArea !== null && totalArea >= threshold) {
+            needHydrant = true;
+            reason = `延べ面積が基準値（${threshold}㎡）以上（${totalArea}㎡）のため設置義務あり`;
+          } else if (windowlessFloors.some(f => f.area >= 150)) {
+            needHydrant = true;
+            reason = '無窓階または地階の床面積が150㎡以上（耐火構造除く基準）';
+          }
+          if (needHydrant) {
+            const hydrantCount = Math.max(1, floorCount * Math.max(1, Math.ceil((effectiveArea / floorCount) / 600)));
+            equipmentResults.push({
+              catKey: 'hydrant',
+              name: '屋内消火栓設備（1号/易操作性1号消火栓箱）',
+              count: hydrantCount,
+              unit: '基',
+              basis: reason,
+              detail: '各階ごとに水平距離25m以下で包含できるよう配置'
+            });
+          }
+        }
+
+        // (E) 避難器具
+        if (above !== null && above >= 2 && occupancy !== null && occupancy >= 20) {
+          const escapeCount = Math.max(1, above - 1);
+          equipmentResults.push({
+            catKey: 'escape',
+            name: '避難器具（緩降機・避難はしご等）',
+            count: escapeCount,
+            unit: '基',
+            basis: `2階以上の階で収容人員が基準（${occupancy}人）以上`,
+            detail: '2階以上の各階に1基ずつ設置'
+          });
+        }
+
+        renderEquipmentResults(equipmentResults);
+        renderMissingParameters({ use, above, basement, totalArea, occupancy, hasWindowless });
+        buildMaterialEstimate(equipmentResults);
+
+        const panel = document.getElementById('materialCostPanel');
+        const btn = document.getElementById('showMaterialCostBtn');
+        panel.classList.add('hidden');
+        btn.innerHTML = '<span>💴</span><span>A材値段を表示</span>';
+
+        navigateTo('result');
+      }
+
+      function renderEquipmentResults(list) {
+        const container = document.getElementById('requiredEquipmentList');
+        if (list.length === 0) {
+          container.innerHTML = `
+            <div class="md:col-span-2 bg-slate-50 border border-slate-200 rounded-xl p-6 text-center text-slate-600">
+              <p class="font-bold text-base">現時点の確定入力値のみでは義務設置設備が特定されませんでした。</p>
+              <p class="text-xs mt-1">下記の「未入力情報による設備の有無」をご確認いただくか、面積・用途・図面を追加してください。</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = list.map(item => `
+          <div class="border border-slate-200 rounded-xl p-4 bg-slate-50/60 flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-2">
+                <span class="text-xs font-bold bg-red-100 text-red-700 px-2.5 py-0.5 rounded-full">設置対象</span>
+                <div class="text-right">
+                  <span class="text-2xl font-black text-slate-900">${item.count}</span>
+                  <span class="text-sm font-bold text-slate-600 ml-0.5">${item.unit}</span>
+                </div>
+              </div>
+              <h4 class="font-bold text-slate-800 text-base mt-2">${item.name}</h4>
+              <p class="text-xs text-slate-600 mt-1">${item.detail}</p>
+            </div>
+            <div class="mt-3 pt-2.5 border-t border-slate-200 text-xs text-slate-500">
+              <strong>根拠：</strong>${item.basis}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function renderMissingParameters(ctx) {
+        const container = document.getElementById('missingParamsContainer');
+        const patterns = [];
+
+        if (!ctx.use) {
+          patterns.push({
+            title: '【使用用途】が未入力です — この項目によって必要な設備が変わります。',
+            cases: [
+              '● 特定防火対象物（飲食店・物販店・ホテル・病院・福祉施設等）の場合：消火器は150㎡以上（(6)項ロ等は0㎡〜）、自動火災報知設備は300㎡以上（ホテル・病院・福祉施設等は0㎡〜）、誘導灯は原則全棟必要になります。',
+              '● 非特定防火対象物（事務所・工場・倉庫・共同住宅等）の場合：消火器は300㎡以上、自動火災報知設備は500㎡以上（共同住宅は500㎡以上等）に基準が緩和されます。'
+            ]
+          });
+        }
+
+        if (ctx.totalArea === null) {
+          patterns.push({
+            title: '【延べ面積・各階床面積】が未入力です — この項目によって必要な設備が変わります。',
+            cases: [
+              '● 150㎡未満の場合：一部用途（(6)項ロ・(1)項ロ等）を除き、消火器・自火報の設置義務が免除される場合があります。',
+              '● 300㎡〜500㎡以上の場合：自動火災報知設備の設置義務が発生します。',
+              '● 700㎡〜1,000㎡以上の場合：屋内消火栓設備およびスプリンクラー設備の検討が必要になります。'
+            ]
+          });
+        }
+
+        if (ctx.above === null) {
+          patterns.push({
+            title: '【階数・無窓階の有無】が未入力です — この項目によって必要な設備が変わります。',
+            cases: [
+              '● 3階以上の階に無窓階がある場合：延べ面積にかかわらず自動火災報知設備や誘導灯の設置義務が発生するケースがあります。',
+              '● 地階または無窓階の床面積が50㎡以上の場合：消火器の設置義務が発生します（150㎡以上で屋内消火栓）。',
+              '● 特定一階段等防火対象物（3階以上に特定用途があり避難階段が1つのみ）の場合：自動火災報知設備が全棟義務化されます。'
+            ]
+          });
+        }
+
+        if (ctx.occupancy === null) {
+          patterns.push({
+            title: '【収容人員】が未入力です — この項目によって必要な設備が変わります。',
+            cases: [
+              '● 収容人員が20人〜30人以上（2階以上の階）の場合：緩降機や避難はしご等の「避難器具」の設置義務が発生します。',
+              '● 収容人員が50人以上（特定用途は30人以上）の場合：防火管理者の選任および消防計画の作成義務が発生します。',
+              '● 収容人員が300人〜500人以上の場合：非常警報設備（放送設備・非常ベル）の設置義務が発生します。'
+            ]
+          });
+        }
+
+        if (patterns.length === 0) {
+          container.innerHTML = `
+            <p class="text-sm text-emerald-800 font-bold">
+              ✅ 主要な判定項目（用途・階数・面積・収容人員）がすべて入力されているため、未入力による条件分岐はありません。
+            </p>
+          `;
+          return;
+        }
+
+        container.innerHTML = patterns.map(p => `
+          <div class="bg-white border border-amber-200 rounded-xl p-4">
+            <p class="font-bold text-sm text-amber-900 mb-2">${p.title}</p>
+            <ul class="space-y-1 text-xs text-slate-700 leading-relaxed">
+              ${p.cases.map(c => `<li>${c}</li>`).join('')}
+            </ul>
+          </div>
+        `).join('');
+      }
+
+      // A材積算
+      function buildMaterialEstimate(equipmentResults) {
+        currentEstimateLines = [];
+        equipmentResults.forEach(eq => {
+          const matchingItems = catalog.filter(c => c.category === eq.catKey);
+          const selected = matchingItems[0] || catalog[0];
+          if (selected) {
+            currentEstimateLines.push({
+              catKey: eq.catKey,
+              catLabel: CATEGORY_LABELS[eq.catKey] || eq.name,
+              catalogId: selected.id,
+              qty: eq.count
+            });
+          }
+        });
+        renderMaterialEstimateTable();
+      }
+
+      function renderMaterialEstimateTable() {
+        const tbody = document.getElementById('materialCostTableBody');
+        if (currentEstimateLines.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500 text-xs">積算対象の設備がありません。</td></tr>`;
+          document.getElementById('totalCostExTax').textContent = '¥0';
+          document.getElementById('totalCostIncTax').textContent = '¥0';
+          return;
+        }
+
+        let totalExTax = 0;
+
+        tbody.innerHTML = currentEstimateLines.map((line, idx) => {
+          const options = catalog.filter(c => c.category === line.catKey);
+          const fallbackOptions = options.length > 0 ? options : catalog;
+          const item = catalog.find(c => c.id === line.catalogId) || fallbackOptions[0];
+          const subTotal = (item ? item.price : 0) * line.qty;
+          totalExTax += subTotal;
+
+          return `
+            <tr class="hover:bg-slate-50">
+              <td class="p-3 font-bold text-slate-700 text-xs">${line.catLabel}</td>
+              <td class="p-3">
+                <select data-est-idx="${idx}" class="est-model-select w-full border border-slate-300 rounded-lg px-2 py-1.5 text-xs bg-white">
+                  ${fallbackOptions.map(opt => `
+                    <option value="${opt.id}" ${item && opt.id === item.id ? 'selected' : ''}>
+                      [${opt.maker}] ${opt.name}
+                    </option>
+                  `).join('')}
+                </select>
+              </td>
+              <td class="p-3 text-xs font-mono text-slate-600">${item ? item.model : '-'}</td>
+              <td class="p-3 text-right text-xs font-medium">¥${(item ? item.price : 0).toLocaleString()}</td>
+              <td class="p-3 text-center">
+                <input type="number" min="0" data-est-idx="${idx}" value="${line.qty}" class="est-qty-input w-16 border border-slate-300 rounded-lg px-2 py-1 text-center text-xs font-bold" />
+              </td>
+              <td class="p-3 text-right font-bold text-slate-900">¥${subTotal.toLocaleString()}</td>
+            </tr>
+          `;
+        }).join('');
+
+        tbody.querySelectorAll('.est-model-select').forEach(sel => {
+          sel.addEventListener('change', e => {
+            const idx = parseInt(e.target.dataset.estIdx, 10);
+            if (currentEstimateLines[idx]) {
+              currentEstimateLines[idx].catalogId = e.target.value;
+              renderMaterialEstimateTable();
+            }
+          });
+        });
+
+        tbody.querySelectorAll('.est-qty-input').forEach(inp => {
+          inp.addEventListener('change', e => {
+            const idx = parseInt(e.target.dataset.estIdx, 10);
+            if (currentEstimateLines[idx]) {
+              currentEstimateLines[idx].qty = Math.max(0, parseInt(e.target.value, 10) || 0);
+              renderMaterialEstimateTable();
+            }
+          });
+        });
+
+        document.getElementById('totalCostExTax').textContent = `¥${totalExTax.toLocaleString()}`;
+        document.getElementById('totalCostIncTax').textContent = `¥${Math.floor(totalExTax * 1.1).toLocaleString()}`;
+      }
+
+      function exportEstimateCSV() {
+        let csv = '設備区分,メーカー,品名,型番,定価(税抜),数量,金額(税抜)\n';
+        currentEstimateLines.forEach(line => {
+          const item = catalog.find(c => c.id === line.catalogId);
+          if (!item) return;
+          const sub = item.price * line.qty;
+          csv += `"${line.catLabel}","${item.maker}","${item.name}","${item.model}",${item.price},${line.qty},${sub}\n`;
+        });
+        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `消防設備_A材定価積算_${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      // 参考資料管理
+      function renderReferences() {
+        const container = document.getElementById('referenceListContainer');
+        if (references.length === 0) {
+          container.innerHTML = `<div class="bg-white border border-slate-200 rounded-xl p-6 text-center text-slate-500 text-sm">登録されている参考資料がありません。上のフォームから追加してください。</div>`;
+          return;
+        }
+
+        container.innerHTML = references.map((ref, idx) => `
+          <div class="bg-white border ${ref.enabled ? 'border-slate-200' : 'border-slate-200 opacity-60'} rounded-xl p-4 shadow-sm flex flex-wrap items-start justify-between gap-4">
+            <div class="flex items-start gap-3 flex-1 min-w-[260px]">
+              <input type="checkbox" data-ref-idx="${idx}" ${ref.enabled ? 'checked' : ''} class="ref-toggle mt-1 w-4 h-4 accent-blue-600 rounded cursor-pointer" />
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded">${ref.org || '法令・基準'}</span>
+                  <h4 class="font-bold text-slate-800 text-sm">${ref.title}</h4>
+                </div>
+                <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">${ref.summary}</p>
+                ${ref.url ? `<a href="${ref.url}" target="_blank" rel="noopener" class="inline-block text-xs text-blue-600 hover:underline mt-1.5 break-all">${ref.url}</a>` : ''}
+              </div>
+            </div>
+            <button type="button" data-ref-idx="${idx}" class="ref-del-btn text-xs bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold px-3 py-1.5 rounded-lg transition shrink-0">
+              削除
+            </button>
+          </div>
+        `).join('');
+
+        container.querySelectorAll('.ref-toggle').forEach(chk => {
+          chk.addEventListener('change', e => {
+            const idx = parseInt(e.target.dataset.refIdx, 10);
+            if (references[idx]) {
+              references[idx].enabled = !references[idx].enabled;
+              saveStorage('fire_refs_v3', references);
+              updateHomeCounts();
+              renderReferences();
+            }
+          });
+        });
+
+        container.querySelectorAll('.ref-del-btn').forEach(btn => {
+          btn.addEventListener('click', e => {
+            const idx = parseInt(e.currentTarget.dataset.refIdx, 10);
+            if (!references[idx]) return;
+            if (!confirm(`「${references[idx].title}」を参考資料から削除しますか？`)) return;
+            references.splice(idx, 1);
+            saveStorage('fire_refs_v3', references);
+            updateHomeCounts();
+            renderReferences();
+          });
+        });
+      }
+
+      // カタログ管理
+      function renderCatalog() {
+        const tbody = document.getElementById('catalogTableBody');
+        if (catalog.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-500 text-sm">カタログデータがありません。上のフォームから追加してください。</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = catalog.map((item, idx) => `
+          <tr class="hover:bg-slate-50">
+            <td class="p-3 text-xs font-bold text-slate-600">${CATEGORY_LABELS[item.category] || item.category}</td>
+            <td class="p-3 text-xs font-bold text-emerald-800">${item.maker}</td>
+            <td class="p-3 text-sm font-medium text-slate-800">${item.name}</td>
+            <td class="p-3 text-xs font-mono text-slate-600">${item.model}</td>
+            <td class="p-3 text-right font-bold text-slate-900">¥${Number(item.price).toLocaleString()}</td>
+            <td class="p-3 text-center">
+              <button type="button" data-cat-idx="${idx}" class="cat-del-btn text-xs bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold px-2.5 py-1 rounded-lg transition">
+                削除
+              </button>
+            </td>
+          </tr>
+        `).join('');
+
+        tbody.querySelectorAll('.cat-del-btn').forEach(btn => {
+          btn.addEventListener('click', e => {
+            const idx = parseInt(e.currentTarget.dataset.catIdx, 10);
+            if (!catalog[idx]) return;
+            if (!confirm(`「${catalog[idx].maker} ${catalog[idx].name}」をカタログから削除しますか？`)) return;
+            catalog.splice(idx, 1);
+            saveStorage('fire_catalog_v3', catalog);
+            updateHomeCounts();
+            renderCatalog();
+          });
+        });
+      }
+
+      // イベント登録
+      document.addEventListener('DOMContentLoaded', () => {
+        updateHomeCounts();
+
+        document.getElementById('headerBrand').addEventListener('click', () => navigateTo('home'));
+        document.getElementById('headerHomeBtn').addEventListener('click', () => navigateTo('home'));
+
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const target = btn.dataset.nav;
+            if (target) navigateTo(target);
+          });
+        });
+
+        document.querySelectorAll('.floor-count-input').forEach(inp => {
+          inp.addEventListener('input', renderFloorRows);
+        });
+
+        document.getElementById('fillSampleBtn').addEventListener('click', fillSampleBuilding);
+        document.getElementById('addSampleDrawingsBtn').addEventListener('click', addSampleDrawings);
+
+        document.getElementById('drawingFileInput').addEventListener('change', event => {
+          const files = Array.from(event.target.files || []);
+          files.forEach(file => {
+            uploadedDrawings.push({
+              id: 'dw_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+              name: file.name,
+              sizeKB: Math.max(1, Math.round(file.size / 1024)),
+              floorTag: '地上1階',
+              roomCount: 6
+            });
+          });
+          event.target.value = '';
+          renderDrawingList();
+        });
+
+        document.getElementById('searchBtn').addEventListener('click', executeSearch);
+
+        document.getElementById('showMaterialCostBtn').addEventListener('click', () => {
+          const panel = document.getElementById('materialCostPanel');
+          const btn = document.getElementById('showMaterialCostBtn');
+          const isHidden = panel.classList.contains('hidden');
+          if (isHidden) {
+            panel.classList.remove('hidden');
+            btn.innerHTML = '<span>🔼</span><span>A材値段を閉じる</span>';
+          } else {
+            panel.classList.add('hidden');
+            btn.innerHTML = '<span>💴</span><span>A材値段を表示</span>';
+          }
+        });
+
+        document.getElementById('exportCsvBtn').addEventListener('click', exportEstimateCSV);
+
+        document.getElementById('addRefBtn').addEventListener('click', () => {
+          const title = document.getElementById('newRefTitle').value.trim();
+          const org = document.getElementById('newRefOrg').value.trim();
+          const url = document.getElementById('newRefUrl').value.trim();
+          const summary = document.getElementById('newRefSummary').value.trim();
+          const category = document.getElementById('newRefCategory').value;
+          if (!title) {
+            alert('資料名を入力してください。');
+            return;
+          }
+          references.unshift({
+            id: 'ref_' + Date.now(),
+            title,
+            org: org || '追加基準',
+            url,
+            summary: summary || '法改正・追加基準として登録',
+            category,
+            enabled: true
+          });
+          saveStorage('fire_refs_v3', references);
+          updateHomeCounts();
+          renderReferences();
+          document.getElementById('newRefTitle').value = '';
+          document.getElementById('newRefOrg').value = '';
+          document.getElementById('newRefUrl').value = '';
+          document.getElementById('newRefSummary').value = '';
+        });
+
+        document.getElementById('resetRefsBtn').addEventListener('click', () => {
+          if (!confirm('参考資料を初期状態（6件）に戻しますか？')) return;
+          references = DEFAULT_REFERENCES.slice();
+          saveStorage('fire_refs_v3', references);
+          updateHomeCounts();
+          renderReferences();
+        });
+
+        document.getElementById('addCatalogBtn').addEventListener('click', () => {
+          const category = document.getElementById('catCategory').value;
+          const maker = document.getElementById('catMaker').value.trim();
+          const name = document.getElementById('catName').value.trim();
+          const model = document.getElementById('catModel').value.trim();
+          const price = parseInt(document.getElementById('catPrice').value, 10);
+          if (!maker || !name || isNaN(price)) {
+            alert('メーカー・品名・定価（数値）を入力してください。');
+            return;
+          }
+          catalog.unshift({
+            id: 'cat_' + Date.now(),
+            category,
+            maker,
+            name,
+            model: model || '-',
+            price
+          });
+          saveStorage('fire_catalog_v3', catalog);
+          updateHomeCounts();
+          renderCatalog();
+          document.getElementById('catMaker').value = '';
+          document.getElementById('catName').value = '';
+          document.getElementById('catModel').value = '';
+          document.getElementById('catPrice').value = '';
+        });
+
+        document.getElementById('resetCatalogBtn').addEventListener('click', () => {
+          if (!confirm('カタログマスタを初期状態（ハツタ・パナソニック15品目）に戻しますか？')) return;
+          catalog = DEFAULT_CATALOG.slice();
+          saveStorage('fire_catalog_v3', catalog);
+          updateHomeCounts();
+          renderCatalog();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
